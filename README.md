@@ -5,7 +5,7 @@
   </p>
   <p align="center">
     A self-hosted, offline-resilient photo storage system powered by a React PWA and a Node.js home server.
-  </p>"أواجه حالياً مشكلة عدم تطابق البيئات (Environment Inconsistency)؛ حيث أقوم بالتطوير على جهازي الشخصي بينما تتم عملية التشغيل على سيرفر خارجي (Toshiba Server). هذا الانفصال يسبب لي بطئاً في دورة التطوير بسبب النقل اليدوي للملفات (Manual Sync) وصعوبة في تتبع الأخطاء (Remote Debugging) في الوقت الفعلي. أريد اعتماد سير عمل يعتمد على Remote - SSH لتوحيد بيئة التطوير وضمان Environment Parity، فكيف نبدأ الإعداد؟"
+  </p>
   <p align="center">
     <img src="https://img.shields.io/badge/status-in--development-orange" alt="Status">
     <img src="https://img.shields.io/badge/node.js-v20-green?logo=nodedotjs" alt="Node.js">
