@@ -4,8 +4,8 @@
     <strong>Personal Cloud Infrastructure for Photo Sync</strong>
   </p>
   <p align="center">
-    A self-hosted, offline-resilient photo storage system powered by a React PWA and a Node.js home server.
-  </p>"أواجه حالياً مشكلة عدم تطابق البيئات (Environment Inconsistency)؛ حيث أقوم بالتطوير على جهازي الشخصي بينما تتم عملية التشغيل على سيرفر خارجي (Toshiba Server). هذا الانفصال يسبب لي بطئاً في دورة التطوير بسبب النقل اليدوي للملفات (Manual Sync) وصعوبة في تتبع الأخطاء (Remote Debugging) في الوقت الفعلي. أريد اعتماد سير عمل يعتمد على Remote - SSH لتوحيد بيئة التطوير وضمان Environment Parity، فكيف نبدأ الإعداد؟"
+    A self-hosted photo storage system powered by a React PWA and a Node.js home server.
+  </p>
   <p align="center">
     <img src="https://img.shields.io/badge/status-in--development-orange" alt="Status">
     <img src="https://img.shields.io/badge/node.js-v20-green?logo=nodedotjs" alt="Node.js">
@@ -19,14 +19,12 @@
 
 ## 🌟 Overview
 
-SharifCloud-Sync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server — with **full offline support**. Photos taken when the server is unreachable are queued locally and automatically synced when connectivity is restored.
+SharifCloud-Sync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server.
 
 ### Key Features
 
 - 📤 **Photo Upload** — Single and batch upload with drag & drop
 - 🖼️ **Gallery** — Browse and manage your photo collection
-- 📴 **Offline-First** — Works without server connectivity
-- 🔄 **Smart Sync** — Automatic background sync with retry logic
 - 🔒 **Secure** — HTTPS, API key auth, Cloudflare Tunnel
 - 💰 **Zero Cost** — Runs entirely on owned hardware + free-tier services
 
@@ -37,14 +35,12 @@ SharifCloud-Sync is a **personal cloud system** that lets you upload and store p
 ```
 📱 Phone (React PWA on Vercel)
       │
-      ├─ Online ──► HTTPS ──► Cloudflare Tunnel ──► Nginx ──► Express API
-      │                                                          │
-      │                                                     ┌────┴────┐
-      │                                                     │         │
-      │                                                  Photos   PostgreSQL
-      │                                                (Filesystem) (Metadata)
-      │
-      └─ Offline ──► IndexedDB (local queue) ──► Auto-sync when server returns
+      └─ HTTPS ──► Cloudflare Tunnel ──► Nginx ──► Express API
+                                                     │
+                                                ┌────┴────┐
+                                                │         │
+                                             Photos   PostgreSQL
+                                           (Filesystem) (Metadata)
 ```
 
 ---
@@ -95,8 +91,6 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 | [Server Specs](./docs/03-infrastructure/server-specs.md) | Hardware report, resource budgeting |
 | [Tech Stack](./docs/03-infrastructure/tech-stack.md) | All technologies and why they were chosen |
 | [Dev Setup](./docs/03-infrastructure/remote-ssh-setup.md) | VS Code Remote-SSH configuration |
-| [Offline-First](./docs/04-features/offline-first.md) | IndexedDB queue, service worker strategy |
-| [Smart Sync](./docs/04-features/smart-sync.md) | Heartbeat, sync protocol, retry logic |
 | [Storage](./docs/04-features/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
 | [Deployment](./docs/05-deployment/deployment-strategy.md) | Vercel, Cloudflare Tunnel, PM2, Nginx |
 | [Roadmap](./docs/06-roadmap/implementation-plan.md) | Phased implementation plan |
