@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authenticate as apiAuthenticate } from '../services/api';
 
@@ -21,10 +22,8 @@ export function AuthProvider({ children }) {
           localStorage.removeItem('onecloudsync_api_key');
           setLoading(false);
         });
-    } else {
-      setLoading(false);
     }
-  }, []);
+  }, [apiKey]);
 
   function login(key) {
     return apiAuthenticate(key).then((data) => {

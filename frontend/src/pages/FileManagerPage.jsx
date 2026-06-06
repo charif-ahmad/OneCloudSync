@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { listFolders, listPhotos, createFolder, renameFolder, deleteFolder, moveFolder, getFolder, getPhotoUrl, deletePhoto, batchMovePhotos } from '../services/api';
+import { listFolders, listPhotos, createFolder, renameFolder, deleteFolder, moveFolder, getFolder, deletePhoto, batchMovePhotos } from '../services/api';
+import SecureImage from '../components/SecureImage';
 import PhotoViewer from '../components/PhotoViewer';
 import FolderPickerModal from '../components/FolderPickerModal';
 
@@ -32,22 +33,7 @@ export default function FileManagerPage() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [selectedPhotos, setSelectedPhotos] = useState([]);
 
-  useEffect(() => {
-    loadContent();
-  }, [currentFolderId]);
-
-  // Close context menu on click outside
-  useEffect(() => {
-    function handleClick(e) {
-      if (contextRef.current && !contextRef.current.contains(e.target)) {
-        setContextMenu(null);
-      }
-    }
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  }, []);
-
-  async function loadContent() {
+  const loadContent = useCallback(async () => {
     setLoading(true);
     try {
       const [foldersData, photosData] = await Promise.all([
@@ -69,7 +55,22 @@ export default function FileManagerPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [currentFolderId]);
+
+  useEffect(() => {
+    loadContent();
+  }, [currentFolderId, loadContent]);
+
+  // Close context menu on click outside
+  useEffect(() => {
+    function handleClick(e) {
+      if (contextRef.current && !contextRef.current.contains(e.target)) {
+        setContextMenu(null);
+      }
+    }
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   function navigateToFolder(folderId) {
     if (folderId) {
@@ -305,15 +306,10 @@ export default function FileManagerPage() {
                     onContextMenu={(e) => handleContextMenu(e, photo, 'photo')}
                     style={{ border: selectedPhotos.includes(photo.id) ? '2px solid var(--primary)' : 'none' }}
                   >
-                    <img
-                      src={getPhotoUrl(photo.id)}
+                    <SecureImage
+                      photoId={photo.id}
                       alt={photo.originalName}
-                      loading="lazy"
                       style={{ background: 'var(--surface-container-low)' }}
-                      onError={(e) => {
-                        e.target.src = '';
-                        e.target.style.background = 'var(--surface-container-high)';
-                      }}
                     />
                     <div className="photo-card-info">
                       <div className="title-md truncate" style={{ fontSize: '0.8125rem' }}>{photo.originalName}</div>

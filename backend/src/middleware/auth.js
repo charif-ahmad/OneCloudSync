@@ -11,7 +11,7 @@ function authMiddleware(req, res, next) {
     return next();
   }
 
-  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+  const apiKey = req.headers['x-api-key'];
 
   if (!apiKey) {
     return res.status(401).json({

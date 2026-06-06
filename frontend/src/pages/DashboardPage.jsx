@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getStorageStats, listPhotos, getPhotoUrl } from '../services/api';
+import { getStorageStats, listPhotos } from '../services/api';
+import SecureImage from '../components/SecureImage';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState(null);
@@ -32,6 +33,7 @@ export default function DashboardPage() {
   }
 
   function timeAgo(date) {
+    // eslint-disable-next-line react-hooks/purity
     const seconds = Math.floor((Date.now() - new Date(date)) / 1000);
     if (seconds < 60) return 'Just now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
@@ -39,8 +41,6 @@ export default function DashboardPage() {
     if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
     return new Date(date).toLocaleDateString();
   }
-
-  const apiKey = localStorage.getItem('onecloudsync_api_key') || '';
 
   return (
     <div className="animate-fade-in">
@@ -105,14 +105,10 @@ export default function DashboardPage() {
           <div className="photo-grid">
             {recentPhotos.map((photo) => (
               <div key={photo.id} className="photo-card">
-                <img
-                  src={getPhotoUrl(photo.id)}
+                <SecureImage
+                  photoId={photo.id}
                   alt={photo.originalName}
-                  loading="lazy"
                   style={{ background: 'var(--surface-container-low)' }}
-                  onError={(e) => { e.target.style.display = 'none'; }}
-                  // Append API key as a custom header isn't possible with img tags,
-                  // so we need to handle this differently — see below
                 />
                 <div className="photo-card-info">
                   <div className="title-md truncate">{photo.originalName}</div>

@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { deletePhoto, getPhotoUrl } from '../services/api';
+import { deletePhoto, getPhotoBlob } from '../services/api';
+import SecureImage from './SecureImage';
 
 export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNavigate, onDeleted }) {
   const [showDelete, setShowDelete] = useState(false);
@@ -52,8 +53,7 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
   }
 
   function handleDownload() {
-    fetch(getPhotoUrl(photo.id))
-      .then(r => r.blob())
+    getPhotoBlob(photo.id)
       .then(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -61,7 +61,8 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
         a.href = url;
         a.click();
         URL.revokeObjectURL(url);
-      });
+      })
+      .catch(err => alert('Failed to download: ' + err.message));
   }
 
   function formatSize(bytes) {
@@ -98,12 +99,11 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
       </div>
 
       {/* Image */}
-      <img
+      <SecureImage
         className="viewer-image animate-scale"
-        src={getPhotoUrl(photo.id)}
+        photoId={photo.id}
         alt={photo.originalName}
         onClick={(e) => e.stopPropagation()}
-        onError={(e) => { e.target.style.background = 'var(--surface-container-high)'; }}
       />
 
       {/* Navigation Arrows — Desktop only (CSS hidden on mobile) */}

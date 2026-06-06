@@ -57,11 +57,11 @@ export function listPhotos({ page = 1, limit = 20, folderId, sort, order } = {})
 }
 
 export function getPhotoUrl(id) {
-  return `${API_BASE}/photos/${id}?apiKey=${encodeURIComponent(getApiKey())}`;
+  return `${API_BASE}/photos/${id}`;
 }
 
-export function getPhotoDownloadUrl(id) {
-  return `${API_BASE}/photos/${id}`;
+export function getPhotoBlob(id) {
+  return request(`/photos/${id}`, { raw: true }).then(res => res.blob());
 }
 
 export function deletePhoto(id) {
