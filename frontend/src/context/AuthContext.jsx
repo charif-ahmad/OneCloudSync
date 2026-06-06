@@ -4,7 +4,7 @@ import { authenticate as apiAuthenticate } from '../services/api';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('sharifcloud_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('onecloudsync_api_key') || '');
   const [isAuthenticated, setIsAuthenticated] = useState(!!apiKey);
   const [loading, setLoading] = useState(!!apiKey);
 
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         .catch(() => {
           setApiKey('');
           setIsAuthenticated(false);
-          localStorage.removeItem('sharifcloud_api_key');
+          localStorage.removeItem('onecloudsync_api_key');
           setLoading(false);
         });
     } else {
@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
 
   function login(key) {
     return apiAuthenticate(key).then((data) => {
-      localStorage.setItem('sharifcloud_api_key', key);
+      localStorage.setItem('onecloudsync_api_key', key);
       setApiKey(key);
       setIsAuthenticated(true);
       return data;
@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    localStorage.removeItem('sharifcloud_api_key');
+    localStorage.removeItem('onecloudsync_api_key');
     setApiKey('');
     setIsAuthenticated(false);
   }

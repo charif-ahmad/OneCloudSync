@@ -2,7 +2,7 @@
 
 ---
 
-# 🛡️ SharifCloud-Sync | Security Architecture Report
+# 🛡️ OneCloudSync | Security Architecture Report
 
 ## 1. ملخص التحصين (Security Hardening Summary)
 تم نقل المشروع من بيئة تطوير مفتوحة (Development) إلى بيئة إنتاج معزولة (Isolated Production) تعتمد على مبدأ **"Zero Trust"** داخل شبكة خاصة.

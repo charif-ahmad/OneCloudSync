@@ -88,7 +88,7 @@ Host toshiba-server
 ### Step 5: Open the Project
 
 1. **File → Open Folder**
-2. Navigate to `/home/<username>/SharifCloud-Sync`
+2. Navigate to `/home/<username>/OneCloudSync`
 3. Click **OK**
 4. You're now editing files **directly on the server!**
 
@@ -117,7 +117,7 @@ After this, connecting via Remote-SSH will be instant — no password needed.
 ```
 1. Open VS Code on Windows
 2. Ctrl+Shift+P → "Remote-SSH: Connect to Host" → toshiba-server
-3. Open folder: ~/SharifCloud-Sync
+3. Open folder: ~/OneCloudSync
 4. Write code in the editor (files are ON the server)
 5. Open terminal (Ctrl+`) → runs bash ON the server
 6. Run: cd backend && npm run dev

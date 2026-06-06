@@ -74,7 +74,7 @@ Estimated memory allocation for the server stack:
 ### Folder Structure for Photo Storage
 
 ```
-/home/<user>/SharifCloud-Sync/backend/uploads/
+/home/<user>/OneCloudSync/backend/uploads/
 ├── 2026/
 │   ├── 01/
 │   │   ├── 01/
@@ -108,7 +108,7 @@ sudo systemctl status nginx postgresql
 htop
 
 # Check uploads folder size
-du -sh ~/SharifCloud-Sync/backend/uploads/
+du -sh ~/OneCloudSync/backend/uploads/
 ```
 
 ---

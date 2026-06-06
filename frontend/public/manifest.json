@@ -1,7 +1,7 @@
 {
-  "name": "SharifCloud-Sync | The Ethereal Archive",
-  "short_name": "Ether Cloud",
-  "description": "Personal cloud photo storage — secure, offline-resilient, beautifully organized.",
+  "name": "OneCloudSync | The Ethereal Archive",
+  "short_name": "OneCloud",
+  "description": "Personal cloud photo storage — secure and beautifully organized.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f9fb",

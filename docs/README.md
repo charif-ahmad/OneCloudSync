@@ -1,12 +1,12 @@
 <p align="center">
-  <h1 align="center">☁️ SharifCloud-Sync</h1>
+  <h1 align="center">☁️ OneCloudSync</h1>
   <p align="center"><strong>Personal Cloud Infrastructure — Technical Documentation</strong></p>
   <p align="center">
     <img src="https://img.shields.io/badge/status-in--development-orange" alt="Status">
     <img src="https://img.shields.io/badge/backend-Node.js%20%2B%20Express-green" alt="Backend">
     <img src="https://img.shields.io/badge/frontend-React%20PWA-blue" alt="Frontend">
     <img src="https://img.shields.io/badge/database-PostgreSQL-336791" alt="Database">
-    <img src="https://img.shields.io/badge/license-Private-red" alt="License">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
   </p>
 </p>
 
@@ -28,7 +28,7 @@
 ## 🏗️ Project Structure
 
 ```
-SharifCloud-Sync/
+OneCloudSync/
 ├── docs/                   ← You are here
 │   ├── 01-project-vision/
 │   ├── 02-architecture/
@@ -65,16 +65,16 @@ SharifCloud-Sync/
 
 ```bash
 # 1. Clone the project on the Toshiba server
-git clone <repo-url> ~/SharifCloud-Sync
+git clone <repo-url> ~/OneCloudSync
 
 # 2. Set up the backend
-cd ~/SharifCloud-Sync/backend
+cd ~/OneCloudSync/backend
 npm install
 cp .env.example .env    # Configure environment variables
 npm run dev
 
 # 3. Set up the frontend (for local development)
-cd ~/SharifCloud-Sync/frontend
+cd ~/OneCloudSync/frontend
 npm install
 npm run dev
 ```

@@ -124,7 +124,7 @@ export default function LoginPage() {
           <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <div style={{ height: '1px', width: '3rem', background: 'var(--outline-variant)', opacity: 0.3 }} />
             <p className="label-sm" style={{ color: 'var(--outline)', letterSpacing: '0.05em' }}>
-              SharifCloud-Sync © 2026
+              OneCloudSync © 2026
             </p>
           </div>
         </div>

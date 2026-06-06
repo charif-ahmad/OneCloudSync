@@ -1,7 +1,7 @@
 {
-  "name": "sharifcloud-backend",
+  "name": "onecloudsync-backend",
   "version": "1.0.0",
-  "description": "SharifCloud-Sync Backend API — Personal Cloud Photo Storage",
+  "description": "OneCloudSync Backend API — Personal Cloud Photo Storage",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -10,5 +10,5 @@
   },
   "keywords": ["cloud", "photo", "sync", "pwa"],
   "author": "Sharif",
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

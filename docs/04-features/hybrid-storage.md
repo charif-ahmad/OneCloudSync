@@ -16,7 +16,7 @@ The system uses a **dual-storage approach**:
 ### Directory Structure
 
 ```
-/home/<user>/SharifCloud-Sync/backend/uploads/
+/home/<user>/OneCloudSync/backend/uploads/
 └── YYYY/
     └── MM/
         └── DD/
@@ -164,10 +164,10 @@ Since photos are on the filesystem and metadata is in PostgreSQL, backups requir
 
 ```bash
 # 1. Backup photos directory
-tar -czf photos-backup-$(date +%Y%m%d).tar.gz ~/SharifCloud-Sync/backend/uploads/
+tar -czf photos-backup-$(date +%Y%m%d).tar.gz ~/OneCloudSync/backend/uploads/
 
 # 2. Backup PostgreSQL
-pg_dump sharifcloud > db-backup-$(date +%Y%m%d).sql
+pg_dump onecloudsync > db-backup-$(date +%Y%m%d).sql
 ```
 
 ---

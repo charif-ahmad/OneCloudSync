@@ -27,16 +27,16 @@ The system is split across two hosting environments:
 
 1. **Push frontend to GitHub**:
    ```bash
-   cd ~/SharifCloud-Sync/frontend
+   cd ~/OneCloudSync/frontend
    git init
-   git remote add origin https://github.com/<username>/sharifcloud-frontend.git
+   git remote add origin https://github.com/<username>/onecloudsync-frontend.git
    git push -u origin main
    ```
 
 2. **Connect Vercel to GitHub**:
    - Go to [vercel.com](https://vercel.com)
    - Sign in with GitHub
-   - Import the `sharifcloud-frontend` repository
+   - Import the `onecloudsync-frontend` repository
    - Framework: **Vite**
    - Build command: `npm run build`
    - Output directory: `dist`
@@ -73,8 +73,8 @@ Use **PM2** to keep the Node.js API running even after SSH disconnects or server
 npm install -g pm2
 
 # Start the API
-cd ~/SharifCloud-Sync/backend
-pm2 start src/server.js --name sharifcloud-api
+cd ~/OneCloudSync/backend
+pm2 start src/server.js --name onecloudsync-api
 
 # Save the process list (survives reboot)
 pm2 save
@@ -88,15 +88,15 @@ pm2 startup
 
 ```bash
 pm2 status               # Check running processes
-pm2 logs sharifcloud-api  # View logs
-pm2 restart sharifcloud-api
-pm2 stop sharifcloud-api
+pm2 logs onecloudsync-api  # View logs
+pm2 restart onecloudsync-api
+pm2 stop onecloudsync-api
 pm2 monit                 # Real-time monitoring dashboard
 ```
 
 ### Nginx Configuration
 
-File: `/etc/nginx/sites-available/sharifcloud`
+File: `/etc/nginx/sites-available/onecloudsync`
 
 ```nginx
 server {
@@ -126,7 +126,7 @@ server {
 
 ```bash
 # Enable the site
-sudo ln -s /etc/nginx/sites-available/sharifcloud /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/onecloudsync /etc/nginx/sites-enabled/
 sudo nginx -t          # Test config
 sudo systemctl reload nginx
 ```
@@ -157,7 +157,8 @@ sudo systemctl reload nginx
    # ↑ Opens a browser to authorize
 
    # Create a tunnel
-   cloudflared tunnel create sharifcloud
+   # Create a tunnel
+   cloudflared tunnel create onecloudsync
 
    # Configure the tunnel
    nano ~/.cloudflared/config.yml
@@ -169,7 +170,7 @@ sudo systemctl reload nginx
    credentials-file: /home/<user>/.cloudflared/<TUNNEL_ID>.json
 
    ingress:
-     - hostname: sharifcloud.yourdomain.com
+     - hostname: onecloudsync.yourdomain.com
        service: http://localhost:80
      - service: http_status:404
    ```
@@ -199,7 +200,7 @@ sudo systemctl reload nginx
 Vercel CDN (React PWA)
     │
     ▼ (API call)
-https://sharifcloud.yourdomain.com/api/photos/upload
+https://onecloudsync.yourdomain.com/api/photos/upload
     │
     ▼
 Cloudflare Tunnel (encrypted)
@@ -234,7 +235,7 @@ pm2 status                          # Should be: online
 sudo systemctl status cloudflared   # Should be: active
 
 # 5. Test end-to-end
-curl https://sharifcloud.yourdomain.com/api/health
+curl https://onecloudsync.yourdomain.com/api/health
 # Expected: {"status":"online",...}
 ```
 

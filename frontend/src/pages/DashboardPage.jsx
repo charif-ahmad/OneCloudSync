@@ -40,7 +40,7 @@ export default function DashboardPage() {
     return new Date(date).toLocaleDateString();
   }
 
-  const apiKey = localStorage.getItem('sharifcloud_api_key') || '';
+  const apiKey = localStorage.getItem('onecloudsync_api_key') || '';
 
   return (
     <div className="animate-fade-in">

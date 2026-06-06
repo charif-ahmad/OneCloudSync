@@ -2,7 +2,7 @@
 const API_BASE = `http://100.103.154.10:3000/api`;// server side "using tailscale"
 
 function getApiKey() {
-  return localStorage.getItem('sharifcloud_api_key') || '';
+  return localStorage.getItem('onecloudsync_api_key') || '';
 }
 
 function headers(extra = {}) {

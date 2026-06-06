@@ -9,13 +9,13 @@ const config = {
   db: {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT, 10) || 5432,
-    name: process.env.DB_NAME || 'sharifcloud',
+    name: process.env.DB_NAME || 'onecloudsync',
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres123',
   },
 
   auth: {
-    apiKey: process.env.API_KEY || 'sharif-cloud-secret-key-2026',
+    apiKey: process.env.API_KEY || 'one-cloud-secret-key-2026',
   },
 
   storage: {

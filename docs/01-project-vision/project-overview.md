@@ -1,6 +1,6 @@
-# 📋 Project Overview — SharifCloud-Sync
+# 📋 Project Overview — OneCloudSync
 
-## What is SharifCloud-Sync?
+## What is OneCloudSync?
 
 A **personal cloud infrastructure** that connects a smartphone application (React PWA) to a home server (Toshiba Satellite L655 running Linux Mint). The system enables **photo upload, storage, and synchronization** between the smartphone and the home server.
 

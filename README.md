@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">☁️ SharifCloud-Sync</h1>
+  <h1 align="center">☁️ OneCloudSync</h1>
   <p align="center">
     <strong>Personal Cloud Infrastructure for Photo Sync</strong>
   </p>
@@ -19,7 +19,7 @@
 
 ## 🌟 Overview
 
-SharifCloud-Sync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server.
+OneCloudSync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server.
 
 ### Key Features
 
@@ -48,7 +48,7 @@ SharifCloud-Sync is a **personal cloud system** that lets you upload and store p
 ## 📁 Project Structure
 
 ```
-SharifCloud-Sync/
+OneCloudSync/
 ├── backend/              # Node.js + Express REST API
 │   ├── src/
 │   │   ├── server.js
@@ -110,9 +110,7 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 
 ---
 
-## 📄 License
-
-Private — Personal Use Only
+MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 

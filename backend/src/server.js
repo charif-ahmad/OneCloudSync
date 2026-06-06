@@ -72,7 +72,7 @@ app.use('/api', apiRoutes);
 // Root route
 app.get('/', (req, res) => {
   res.json({
-    name: 'SharifCloud-Sync API',
+    name: 'OneCloudSync API',
     version: '1.0.0',
     docs: '/api/health',
   });
@@ -88,7 +88,7 @@ app.use(errorHandler);
 // ─────────────────────────────────────
 app.listen(config.port, () => {
   console.log('');
-  console.log('  ☁️  SharifCloud-Sync API');
+  console.log('  ☁️  OneCloudSync API');
   console.log(`  🌍  Environment: ${config.env}`);
   console.log(`  🚀  Server running on: http://localhost:${config.port}`);
   console.log(`  📂  Upload directory: ${config.storage.uploadDir}`);
