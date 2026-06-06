@@ -17,6 +17,12 @@
 
 ---
 
+## 🖥️ Dashboard Preview
+
+![Dashboard Preview](./design/stitch/dashboard/screen.png)
+
+---
+
 ## 🌟 Overview
 
 OneCloudSync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server.
@@ -97,16 +103,39 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 
 ---
 
-## 🖥️ Server
+## 🖥️ Requirements
 
-| Spec | Value |
-|------|-------|
-| Machine | Toshiba Satellite L655 |
-| OS | Linux Mint |
-| RAM | 4.1 GB |
-| Storage | 430 GB |
-| Runtime | Node.js v20 |
-| Database | PostgreSQL |
+| Component | Minimum |
+|-----------|---------|
+| **OS** | Any Linux distribution (Ubuntu, Debian, Mint, etc.) |
+| **RAM** | 2 GB+ |
+| **Storage** | 50 GB+ (depends on your photo collection) |
+| **Runtime** | Node.js v20+ |
+| **Database** | PostgreSQL |
+| **Web Server** | Nginx (reverse proxy) |
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# 1. Clone the repository
+git clone <repo-url>
+cd OneCloudSync
+
+# 2. Set up the backend
+cd backend
+cp .env.example .env    # Edit with your own values
+npm install
+npm run dev
+
+# 3. Set up the frontend
+cd ../frontend
+npm install
+npm run dev
+```
+
+> See [.env.example](./backend/.env.example) for all configuration options.
 
 ---
 

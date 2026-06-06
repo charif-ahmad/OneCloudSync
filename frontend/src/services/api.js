@@ -1,5 +1,6 @@
-// const API_BASE = `http://${window.location.hostname}:3000/api`;
-const API_BASE = `http://100.103.154.10:3000/api`;// server side "using tailscale"
+const API_BASE = `http://${window.location.hostname}:3000/api`;
+// const API_BASE = `http://<your-tailscale-ip>:3000/api`; // Example: Accessing server-side API via Tailscale VPN
+
 
 function getApiKey() {
   return localStorage.getItem('onecloudsync_api_key') || '';

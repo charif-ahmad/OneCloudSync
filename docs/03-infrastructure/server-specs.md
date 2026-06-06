@@ -1,94 +1,87 @@
-# 🖥️ Server Specifications
+# 🖥️ Server Requirements
 
-## Hardware Report
+## Minimum Requirements
 
-| Component | Specification |
-|-----------|--------------|
-| **Machine** | Toshiba Satellite L655 |
-| **OS** | Linux Mint (Ubuntu/Debian based) |
-| **CPU** | 4 Cores (25-35% idle utilization) |
-| **Total RAM** | 4.1 GB |
-| **Idle RAM Usage** | ~2.2 GB (55%) |
-| **Available RAM** | ~1.9 GB |
-| **Swap** | ~480 MB (minimal usage) |
-| **Storage** | 430 GB HDD |
-| **Network** | Ethernet / WiFi (Home Network) |
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| **OS** | Any Linux distribution (Ubuntu, Debian, Mint, etc.) | Ubuntu 22.04 LTS / Debian 12 |
+| **CPU** | 2 Cores | 4 Cores |
+| **RAM** | 2 GB | 4 GB+ |
+| **Storage** | 50 GB | 200 GB+ (depends on photo collection size) |
+| **Network** | Ethernet or WiFi | Ethernet (for reliability) |
 
 ---
 
-## Resource Budget
+## Required Software
 
-Estimated memory allocation for the server stack:
+| Software | Version | Purpose |
+|----------|---------|---------|
+| **Node.js** | v20+ | Backend runtime |
+| **PostgreSQL** | Latest | Photo metadata storage |
+| **Nginx** | Latest | Reverse proxy |
+| **PM2** | Latest | Process manager (keeps API running) |
+
+---
+
+## Resource Budget (Estimated)
+
+For a low-resource server (~4 GB RAM):
 
 | Service | RAM Usage | Priority |
 |---------|-----------|----------|
-| **Linux Mint OS** | ~800 MB | System |
-| **Desktop Environment** | ~600 MB | ⚠️ Can be disabled |
+| **Linux OS** | ~800 MB | System |
 | **PostgreSQL** | ~200-500 MB | Critical |
 | **Node.js + Express** | ~100-200 MB | Critical |
 | **Nginx** | ~10-30 MB | Critical |
-| **Cloudflare Tunnel** | ~30-50 MB | Critical |
 | **System Buffers/Cache** | ~200-400 MB | System |
-| **Total Estimated** | ~2.0-2.6 GB | — |
-| **Free Remaining** | ~1.5-2.1 GB | — |
+| **Total Estimated** | ~1.3-1.9 GB | — |
 
-### ⚠️ Optimization Recommendations
+> 💡 **Tip**: If running on a laptop or old machine, disable the desktop environment to save ~600 MB RAM:
+> ```bash
+> sudo systemctl set-default multi-user.target
+> ```
 
-1. **Disable Desktop Environment** if using the machine as a headless server:
-   ```bash
-   sudo systemctl set-default multi-user.target
-   # Saves ~600 MB RAM
-   ```
+---
 
-2. **Tune PostgreSQL** (`/etc/postgresql/*/main/postgresql.conf`):
-   ```ini
-   shared_buffers = 128MB          # Default is 128MB, keep it
-   work_mem = 4MB                  # Reduce from default
-   maintenance_work_mem = 64MB     # Reduce from default
-   effective_cache_size = 512MB    # Hint for query planner
-   max_connections = 20            # Low — single user system
-   ```
+## PostgreSQL Tuning (Low-Resource Servers)
 
-3. **Manage services dynamically** via `systemctl`:
-   ```bash
-   # Stop services when not developing
-   sudo systemctl stop postgresql nginx
+If your server has limited RAM, add these settings to `/etc/postgresql/*/main/postgresql.conf`:
 
-   # Start only what you need
-   sudo systemctl start postgresql nginx
-   ```
+```ini
+shared_buffers = 128MB
+work_mem = 4MB
+maintenance_work_mem = 64MB
+effective_cache_size = 512MB
+max_connections = 20            # Single user system — no need for many
+```
 
 ---
 
 ## Storage Planning
 
-| Metric | Value |
-|--------|-------|
-| Total Disk | 430 GB |
-| Reserved for OS + Apps | ~30 GB |
-| Available for Photos | ~400 GB |
-| Average Photo Size | 3-8 MB |
-| Estimated Capacity | **50,000 - 130,000 photos** |
-| Recommended Max Usage | 80% (344 GB) |
+| Average Photo Size | 100 GB Storage | 200 GB Storage | 400 GB Storage |
+|--------------------|---------------|----------------|----------------|
+| 3 MB | ~33,000 photos | ~66,000 photos | ~133,000 photos |
+| 5 MB | ~20,000 photos | ~40,000 photos | ~80,000 photos |
+| 8 MB | ~12,500 photos | ~25,000 photos | ~50,000 photos |
 
-### Folder Structure for Photo Storage
+> Recommended: Keep disk usage below 80% for best filesystem performance.
+
+### Photo Storage Structure
 
 ```
-/home/<user>/OneCloudSync/backend/uploads/
-├── 2026/
-│   ├── 01/
-│   │   ├── 01/
-│   │   │   ├── a1b2c3d4.jpg
-│   │   │   └── e5f6a7b8.jpg
-│   │   ├── 02/
-│   │   └── ...
-│   ├── 02/
-│   └── ...
-└── ...
+backend/uploads/
+└── YYYY/
+    └── MM/
+        └── DD/
+            ├── <uuid>.jpg
+            ├── <uuid>.png
+            └── <uuid>.webp
 ```
 
-- **Format**: `/uploads/YYYY/MM/DD/<uuid>.ext`
-- **Rationale**: Prevents any single directory from containing too many files (filesystem performance degrades beyond ~10,000 files per directory)
+- **UUID-based filenames** to prevent collisions
+- **Date-based folders** based on upload date
+- **Original extension preserved** for proper content-type serving
 
 ---
 

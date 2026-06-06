@@ -184,7 +184,7 @@ sudo systemctl reload nginx
 
 5. **DNS Setup**: Add a CNAME record in Cloudflare DNS:
    ```
-   sharifcloud.yourdomain.com → <TUNNEL_ID>.cfargotunnel.com
+   onecloudsync.yourdomain.com → <TUNNEL_ID>.cfargotunnel.com
    ```
 
 > **Note**: If you don't have a domain, you can use Cloudflare's free `*.trycloudflare.com` subdomain for quick testing.
