@@ -19,7 +19,7 @@
 
 ## 🖥️ Dashboard Preview
 
-![Dashboard Preview](./design/stitch/dashboard/screen.png)
+![Dashboard Preview](./docs/assets/dashboard-preview.png)
 
 ---
 
