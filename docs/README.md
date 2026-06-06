@@ -19,7 +19,7 @@
 | 01 | [Project Vision](./01-project-vision/project-overview.md) | Core idea, goals, and project scope | `01-project-vision/` |
 | 02 | [Architecture](./02-architecture/) | System design, API contracts, and data flow | `02-architecture/` |
 | 03 | [Infrastructure](./03-infrastructure/) | Server specs, tech stack, and dev environment setup | `03-infrastructure/` |
-| 04 | [Features](./04-features/) | Offline-first strategy, smart sync, and hybrid storage | `04-features/` |
+| 04 | [Features](./04-features/) | Hybrid storage strategy and filesystem design | `04-features/` |
 | 05 | [Deployment](./05-deployment/) | Hosting strategy and remote connectivity | `05-deployment/` |
 | 06 | [Roadmap](./06-roadmap/) | Phased implementation plan and priorities | `06-roadmap/` |
 

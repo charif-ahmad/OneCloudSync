@@ -155,4 +155,4 @@ When connected via Remote-SSH, install these extensions **on the server side**:
 
 ---
 
-> **Next**: [Offline-First Strategy →](../04-features/offline-first.md)
+> **Next**: [Hybrid Storage Strategy →](../04-features/hybrid-storage.md)

@@ -128,7 +128,7 @@ POST /api/photos/batch
 Content-Type: multipart/form-data
 ```
 
-**Purpose**: Upload multiple photos from the offline sync queue.  
+**Purpose**: Upload multiple photos in a single request.  
 **Auth Required**: Yes  
 **Max Files**: 10 per request
 
