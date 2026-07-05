@@ -36,6 +36,21 @@ OneCloudSync is a **personal cloud system** that lets you upload and store photo
 
 ---
 
+## 🛠️ Case Study: Zero-Cost Homelab Deployment
+
+> 🚀 **Engineering Spotlight for Founders & Entrepreneurs**
+>
+> This project isn't just code—it's a fully operational production setup built on a **$0 infrastructure budget** by repurposing an old **2010 Toshiba Satellite L655 laptop** as a hardened home server. 
+> 
+> Key engineering highlights of this real-world deployment:
+> - **Zero Open Ports**: Entirely isolated behind a secure **Tailscale VPN (WireGuard)**. No public exposure, no open router ports.
+> - **Extreme Resource Optimization**: Configured to run PostgreSQL, Express, Nginx, and Tailscale smoothly on just **4.1 GB of RAM** by disabling the desktop environment and tuning database buffers.
+> - **Zero Cost**: Repurposed hardware + free-tier developer tools.
+>
+> 📂 Curious about how it was done? Check out the [Personal Setup & Hardening Guide](./docs/my-setup/README.md).
+
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -98,8 +113,9 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 | [Tech Stack](./docs/03-infrastructure/tech-stack.md) | All technologies and why they were chosen |
 | [Dev Setup](./docs/03-infrastructure/remote-ssh-setup.md) | VS Code Remote-SSH configuration |
 | [Storage](./docs/04-features/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
-| [Deployment](./docs/05-deployment/deployment-strategy.md) | Vercel, Cloudflare Tunnel, PM2, Nginx |
+| [Deployment](./docs/05-deployment/deployment-strategy.md) | Vercel, Cloudflare Tunnel, PM2, Nginx,your Pc |
 | [Roadmap](./docs/06-roadmap/implementation-plan.md) | Phased implementation plan |
+| [Personal Setup](./docs/my-setup/README.md) | Specs, Tailscale VPN hardening, & auto-run scripts |
 
 ---
 
@@ -107,12 +123,10 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 
 | Component | Minimum |
 |-----------|---------|
-| **OS** | Any Linux distribution (Ubuntu, Debian, Mint, etc.) |
 | **RAM** | 2 GB+ |
 | **Storage** | 50 GB+ (depends on your photo collection) |
 | **Runtime** | Node.js v20+ |
 | **Database** | PostgreSQL |
-| **Web Server** | Nginx (reverse proxy) |
 
 ---
 
