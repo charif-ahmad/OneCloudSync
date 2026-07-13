@@ -1,6 +1,8 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { deletePhoto, getPhotoBlob } from '../services/api';
 import SecureImage from './SecureImage';
+import Modal from './Modal';
 
 export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNavigate, onDeleted }) {
   const [showDelete, setShowDelete] = useState(false);
@@ -72,7 +74,7 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
     return bytes + ' B';
   }
 
-  return (
+  return createPortal(
     <div
       className="viewer-overlay animate-fade-in"
       onClick={onClose}
@@ -130,10 +132,9 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal — above the viewer overlay (z-index 2000) */}
       {showDelete && (
-        <div className="modal-backdrop" style={{ zIndex: 110 }} onClick={(e) => { e.stopPropagation(); setShowDelete(false); }}>
-          <div className="modal animate-scale" onClick={(e) => e.stopPropagation()}>
+        <Modal zIndex={2100} onClose={() => setShowDelete(false)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ width: '3rem', height: '3rem', borderRadius: 'var(--radius-lg)', background: 'var(--error-container)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span className="material-symbols-outlined" style={{ color: 'var(--error)', fontSize: '1.5rem' }}>warning</span>
@@ -157,9 +158,9 @@ export default function PhotoViewer({ photo, photos, currentIndex, onClose, onNa
                 Delete
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

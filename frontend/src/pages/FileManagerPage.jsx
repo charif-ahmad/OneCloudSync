@@ -4,6 +4,7 @@ import { listFolders, listPhotos, createFolder, renameFolder, deleteFolder, move
 import SecureImage from '../components/SecureImage';
 import PhotoViewer from '../components/PhotoViewer';
 import FolderPickerModal from '../components/FolderPickerModal';
+import Modal from '../components/Modal';
 
 export default function FileManagerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -336,8 +337,7 @@ export default function FileManagerPage() {
 
       {/* New Folder Modal */}
       {showNewFolder && (
-        <div className="modal-backdrop" onClick={() => setShowNewFolder(false)}>
-          <div className="modal animate-scale" onClick={(e) => e.stopPropagation()}>
+        <Modal onClose={() => setShowNewFolder(false)}>
             <h2 className="headline-sm" style={{ marginBottom: '1.5rem' }}>Create New Folder</h2>
             <form onSubmit={handleCreateFolder}>
               <input
@@ -352,14 +352,12 @@ export default function FileManagerPage() {
                 <button type="submit" className="btn btn-primary">Create</button>
               </div>
             </form>
-          </div>
-        </div>
+        </Modal>
       )}
 
       {/* Rename Modal */}
       {renameTarget && (
-        <div className="modal-backdrop" onClick={() => setRenameTarget(null)}>
-          <div className="modal animate-scale" onClick={(e) => e.stopPropagation()}>
+        <Modal onClose={() => setRenameTarget(null)}>
             <h2 className="headline-sm" style={{ marginBottom: '1.5rem' }}>Rename Folder</h2>
             <form onSubmit={handleRenameFolder}>
               <input
@@ -374,8 +372,7 @@ export default function FileManagerPage() {
                 <button type="submit" className="btn btn-primary">Rename</button>
               </div>
             </form>
-          </div>
-        </div>
+        </Modal>
       )}
 
       {/* Context Menu */}
@@ -403,8 +400,7 @@ export default function FileManagerPage() {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="modal-backdrop" onClick={() => setDeleteTarget(null)}>
-          <div className="modal animate-scale" onClick={(e) => e.stopPropagation()}>
+        <Modal onClose={() => setDeleteTarget(null)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ width: '3rem', height: '3rem', borderRadius: 'var(--radius-lg)', background: 'var(--error-container)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span className="material-symbols-outlined" style={{ color: 'var(--error)', fontSize: '1.5rem' }}>warning</span>
@@ -433,8 +429,7 @@ export default function FileManagerPage() {
                 Delete
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
 
       {/* Move Picker Modal */}

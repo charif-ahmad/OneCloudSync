@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listFolders } from '../services/api';
+import Modal from './Modal';
 
 export default function FolderPickerModal({ onClose, onMove, currentFolderId, disableFolderIds = [] }) {
   const [folders, setFolders] = useState([]);
@@ -25,8 +26,7 @@ export default function FolderPickerModal({ onClose, onMove, currentFolderId, di
   }, [disableFolderIds]);
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal animate-scale" onClick={(e) => e.stopPropagation()}>
+    <Modal onClose={onClose}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h2 className="headline-sm">Move to...</h2>
           <button className="btn-icon" onClick={onClose}>
@@ -73,7 +73,6 @@ export default function FolderPickerModal({ onClose, onMove, currentFolderId, di
             )}
           </div>
         )}
-      </div>
-    </div>
+    </Modal>
   );
 }

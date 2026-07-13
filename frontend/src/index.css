@@ -582,8 +582,12 @@ ul, ol { list-style: none; }
   50% { opacity: 0.25; }
 }
 
-.animate-fade-in { animation: fade-in 0.3s ease forwards; }
-.animate-scale   { animation: fade-in-scale 0.3s ease forwards; }
+/* No 'forwards' fill: a retained transform would keep these elements as a
+   containing block / stacking context, trapping fixed-position descendants
+   (modal backdrops, context menu) below the sidebar. End state == natural
+   state, so dropping the fill changes nothing visually. */
+.animate-fade-in { animation: fade-in 0.3s ease; }
+.animate-scale   { animation: fade-in-scale 0.3s ease; }
 
 /* ── Utilities ────────────────────────────────────────────────── */
 .flex-center { display: flex; align-items: center; justify-content: center; }
