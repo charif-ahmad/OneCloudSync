@@ -29,7 +29,15 @@ tailscale ip -4
 
 ## Security Hardening (What I Did)
 
-### 1. Nginx — Listen only on Tailscale IP
+> 🐳 **Running with Docker?** Steps 1 and 2 below apply to the **manual (PM2 + host Nginx) setup only**. In the [Docker deployment](../05-deployment/docker-deployment.md#tailscale-hardening), the same result is one line in `.env`:
+>
+> ```dotenv
+> BIND_IP=100.x.x.x   # your Tailscale IP → app reachable only via the VPN
+> ```
+>
+> Port 3000 and PostgreSQL need no extra hardening in Docker — they are never published to the host at all. Steps 3 and 4 apply to both setups.
+
+### 1. Nginx — Listen only on Tailscale IP *(manual setup)*
 
 File: `/etc/nginx/sites-available/onecloudsync`
 
@@ -42,7 +50,7 @@ server {
 
 **Why?** This blocks anyone on the local WiFi from accessing the server. Only devices connected via Tailscale can reach it.
 
-### 2. Node.js — Bind to Tailscale IP only
+### 2. Node.js — Bind to Tailscale IP only *(manual setup)*
 
 In `backend/src/server.js`, instead of `0.0.0.0`:
 

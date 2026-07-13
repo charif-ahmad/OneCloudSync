@@ -44,6 +44,8 @@ All settings live in the root `.env` file (see `.env.example`):
 | `DB_NAME` | | `onecloudsync` | Database name |
 | `DB_USER` | | `postgres` | Database user |
 | `CORS_ORIGIN` | | `http://localhost:8080` | Allowed origin in production |
+| `BIND_IP` | | `0.0.0.0` | Interface the app listens on (see [Tailscale hardening](#tailscale-hardening)) |
+| `BIND_PORT` | | `8080` | Host port the app is published on |
 
 ## Where the data lives
 
@@ -53,6 +55,26 @@ All settings live in the root `.env` file (see `.env.example`):
 | **Metadata** | `pgdata` named Docker volume | PostgreSQL internals; back up via `pg_dump` (below) |
 
 > ⚠️ The `photos/` directory must be owned by your host user. Docker creates missing bind-mount directories as **root**, which makes uploads fail with `EACCES` (the backend runs as a non-root user). If that happens: `sudo chown -R $USER:$USER photos`.
+
+## Tailscale hardening
+
+By default the app is published on **all interfaces** (`0.0.0.0:8080`), so anyone on the local network can reach the login page (still protected by the API key). To restore the zero-LAN-exposure posture from the [Tailscale setup guide](../my-setup/tailscale-setup.md), bind the published port to the server's Tailscale IP in `.env`:
+
+```bash
+tailscale ip -4        # e.g. 100.103.154.10
+```
+
+```dotenv
+BIND_IP=100.103.154.10
+```
+
+```bash
+docker compose up -d   # re-create the frontend with the new binding
+```
+
+Now the app is reachable **only** from devices on your tailnet, at `http://<tailscale-ip>:8080`. Nothing else needs restricting: the API (port 3000) and PostgreSQL are never published to the host at all — they exist only on Docker's internal network.
+
+> If the Tailscale IP ever changes, update `BIND_IP` and run `docker compose up -d` again. Note that Docker must start **after** Tailscale on boot, otherwise the bind fails; if that happens, `docker compose up -d` once `tailscale status` is up.
 
 ## Day-2 Operations
 
