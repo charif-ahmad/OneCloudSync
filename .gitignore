@@ -15,6 +15,10 @@ build/
 frontend/dist/
 design/
 design_mobile/
+# الصور المرفوعة (Docker bind mount)
+photos/
+
 # ملفات النظام المزعجة
 .DS_Store
 Thumbs.db
+
