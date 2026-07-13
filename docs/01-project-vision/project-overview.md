@@ -25,18 +25,18 @@ Every photo is validated via checksums (SHA-256) to prevent corruption during tr
 The server has limited resources (4.1 GB RAM, 430 GB storage). Every architectural decision prioritizes low memory usage and efficient I/O.
 
 ### 3. Separation of Concerns
-- **Frontend (React PWA)** → Hosted on Vercel (free CDN, HTTPS, global edge network)
+- **Frontend (React PWA)** → Static web app served by nginx (fully decoupled from the API)
 - **Backend (Node.js API)** → Runs on the home server (handles data and file storage)
 
 ### 4. Security by Simplicity
-Single-user system with API key authentication. No complex OAuth flows — security comes from HTTPS, Cloudflare Tunnel, and access control at the network level.
+Single-user system with API key authentication. No complex OAuth flows — security comes from API key auth, rate limiting, and access control at the network level (e.g. Tailscale VPN).
 
 ---
 
 ## 🔄 High-Level Data Flow
 
 ```
-📱 Phone (React PWA on Vercel)
+📱 Phone (React PWA)
     │
     └─ POST /api/photos/upload → Server stores photo + metadata
 ```

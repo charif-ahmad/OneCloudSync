@@ -172,4 +172,4 @@ pg_dump onecloudsync > db-backup-$(date +%Y%m%d).sql
 
 ---
 
-> **Next**: [Deployment Strategy →](../05-deployment/deployment-strategy.md)
+> **Next**: [Deployment →](../05-deployment/README.md)

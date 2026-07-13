@@ -6,10 +6,10 @@
 ┌────────────────────────────────────────┐
 │            FRONTEND (Client)           │
 │  React.js • PWA • Service Worker       │
-│  IndexedDB • Vite • Vercel             │
+│  IndexedDB • Vite                      │
 ├────────────────────────────────────────┤
 │            NETWORK LAYER               │
-│  HTTPS • REST API • Cloudflare Tunnel  │
+│  REST API • Tailscale VPN (optional)   │
 ├────────────────────────────────────────┤
 │            BACKEND (Server)            │
 │  Node.js • Express.js • Nginx          │
@@ -95,8 +95,8 @@
 
 | Technology | Purpose |
 |------------|---------|
-| **Cloudflare Tunnel** | Secure public access to home server without port forwarding |
-| **Vercel** | Free-tier hosting for React PWA frontend |
+| **Docker + Docker Compose** | One-command deployment of the full stack on any device |
+| **Tailscale (optional)** | Secure remote access to the home server without port forwarding |
 | **Git** | Version control |
 | **VS Code + Remote-SSH** | Development environment (write code from Windows, run on Linux) |
 | **systemctl** | Service management for Nginx and PostgreSQL |

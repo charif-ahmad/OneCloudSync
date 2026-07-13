@@ -67,7 +67,7 @@ OneCloudSync/
 
 Setup instructions live in **one place** — the [root README](../README.md#-quick-start):
 
-- **Docker (recommended)** — one command for the full stack; details in the [Docker Deployment Guide](./05-deployment/docker-deployment.md)
+- **Docker (recommended)** — one command for the full stack; details in the [Deployment Guide](./05-deployment/README.md)
 - **Manual** — Node.js + local PostgreSQL for development
 
 ---

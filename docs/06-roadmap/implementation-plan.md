@@ -74,17 +74,15 @@ Phase 1 ──────► Phase 2 ──────► Phase 3
 
 | # | Task | Status |
 |---|------|--------|
-| 3.1 | Configure Nginx reverse proxy on Toshiba | ⬜ |
-| 3.2 | Install and configure Cloudflare Tunnel | ⬜ |
-| 3.3 | Set up PM2 process manager for Node.js | ⬜ |
-| 3.4 | Deploy frontend to Vercel | ⬜ |
-| 3.5 | Configure environment variables on Vercel | ⬜ |
-| 3.6 | Test full end-to-end flow (phone → Vercel → tunnel → server) | ⬜ |
-| 3.7 | Set up auto-start for all services on reboot | ⬜ |
-| 3.8 | Create backup script for photos + database | ⬜ |
+| 3.1 | Dockerize the full stack (Compose: db + API + web) | ✅ |
+| 3.2 | Set up Tailscale VPN for secure remote access | ⬜ |
+| 3.3 | Restrict the app to the VPN (`BIND_IP` in `.env`) | ⬜ |
+| 3.4 | Test full end-to-end flow (phone → VPN → server) | ⬜ |
+| 3.5 | Set up auto-start for all services on reboot | ⬜ |
+| 3.6 | Create backup script for photos + database | ⬜ |
 
 ### Deliverables
-- [ ] System accessible from phone via public URL
+- [ ] System accessible from phone (via VPN or local network)
 - [ ] All services auto-start on server reboot
 - [ ] Backup strategy in place
 

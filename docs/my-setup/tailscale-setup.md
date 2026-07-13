@@ -29,7 +29,7 @@ tailscale ip -4
 
 ## Security Hardening (What I Did)
 
-> 🐳 **Running with Docker?** Steps 1 and 2 below apply to the **manual (PM2 + host Nginx) setup only**. In the [Docker deployment](../05-deployment/docker-deployment.md#tailscale-hardening), the same result is one line in `.env`:
+> 🐳 **Running with Docker?** Steps 1 and 2 below apply to the **manual (PM2 + host Nginx) setup only**. In the [Docker deployment](../05-deployment/README.md#tailscale-hardening), the same result is one line in `.env`:
 >
 > ```dotenv
 > BIND_IP=100.x.x.x   # your Tailscale IP → app reachable only via the VPN

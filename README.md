@@ -31,8 +31,8 @@ OneCloudSync is a **personal cloud system** that lets you upload and store photo
 
 - 📤 **Photo Upload** — Single and batch upload with drag & drop
 - 🖼️ **Gallery** — Browse and manage your photo collection
-- 🔒 **Secure** — HTTPS, API key auth, Cloudflare Tunnel
-- 💰 **Zero Cost** — Runs entirely on owned hardware + free-tier services
+- 🔒 **Secure** — API key auth, rate limiting, optional VPN-only access (Tailscale)
+- 💰 **Zero Cost** — Runs entirely on your own hardware
 
 ---
 
@@ -54,14 +54,14 @@ OneCloudSync is a **personal cloud system** that lets you upload and store photo
 ## 🏗️ Architecture
 
 ```
-📱 Phone (React PWA on Vercel)
+📱 Phone / Browser (React PWA)
       │
-      └─ HTTPS ──► Cloudflare Tunnel ──► Nginx ──► Express API
-                                                     │
-                                                ┌────┴────┐
-                                                │         │
-                                             Photos   PostgreSQL
-                                           (Filesystem) (Metadata)
+      └──► Nginx ──► Express API
+                       │
+                  ┌────┴────┐
+                  │         │
+               Photos   PostgreSQL
+             (Filesystem) (Metadata)
 ```
 
 ---
@@ -113,8 +113,7 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 | [Tech Stack](./docs/03-infrastructure/tech-stack.md) | All technologies and why they were chosen |
 | [Dev Setup](./docs/03-infrastructure/remote-ssh-setup.md) | VS Code Remote-SSH configuration |
 | [Storage](./docs/04-features/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
-| [Deployment](./docs/05-deployment/deployment-strategy.md) | Vercel, Cloudflare Tunnel, PM2, Nginx,your Pc |
-| [Docker Deployment](./docs/05-deployment/docker-deployment.md) | One-command setup with Docker Compose |
+| [Deployment](./docs/05-deployment/README.md) | Running with Docker Compose or manually, on any device |
 | [Roadmap](./docs/06-roadmap/implementation-plan.md) | Phased implementation plan |
 | [Personal Setup](./docs/my-setup/README.md) | Specs, Tailscale VPN hardening, & auto-run scripts |
 
@@ -148,7 +147,7 @@ docker compose run --rm backend node src/config/db-init.js   # first run only
 # → open http://localhost:8080 and log in with your API_KEY
 ```
 
-Photos are stored on the host in `./photos/`; database data lives in a Docker volume. See the full [Docker Deployment Guide](./docs/05-deployment/docker-deployment.md) for configuration, backups, and troubleshooting.
+Photos are stored on the host in `./photos/`; database data lives in a Docker volume. See the [Deployment Guide](./docs/05-deployment/README.md) for backups and configuration.
 
 ### 🔧 Option B — Manual (local development)
 
