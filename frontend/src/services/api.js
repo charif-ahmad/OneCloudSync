@@ -1,5 +1,6 @@
-const API_BASE = `http://${window.location.hostname}:3000/api`;
-// const API_BASE = `http://<your-tailscale-ip>:3000/api`; // Example: Accessing server-side API via Tailscale VPN
+// Same-origin by default: nginx (Docker) and the Vite dev server both proxy /api
+// to the backend. Set VITE_API_BASE to point elsewhere (e.g. a Tailscale IP).
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 
 function getApiKey() {

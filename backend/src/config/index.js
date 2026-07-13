@@ -19,7 +19,9 @@ const config = {
   },
 
   storage: {
-    uploadDir: path.join(__dirname, '..', '..', process.env.UPLOAD_DIR || 'uploads'),
+    uploadDir: path.isAbsolute(process.env.UPLOAD_DIR || '')
+      ? process.env.UPLOAD_DIR
+      : path.join(__dirname, '..', '..', process.env.UPLOAD_DIR || 'uploads'),
     maxFileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 25 * 1024 * 1024, // 25MB
     allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/heic'],
   },
