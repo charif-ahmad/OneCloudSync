@@ -1,253 +1,244 @@
 # 🔌 API Design
 
+> This document describes the API **as implemented** in `backend/src/routes/api.js` and its controllers. If you change an endpoint, update this page in the same commit.
+
 ## Base Configuration
 
 | Property | Value |
 |----------|-------|
-| **Base URL** | `https://<cloudflare-tunnel-domain>/api` |
-| **Protocol** | HTTPS (TLS 1.3) |
-| **Auth Method** | API Key via `X-API-Key` header |
-| **Content Type** | `application/json` (unless file upload) |
-| **Max Upload Size** | 25 MB per file |
+| **Base URL (Docker)** | `http://<host>:8080/api` — nginx proxies to the backend |
+| **Base URL (manual/dev)** | `http://<host>:3000/api` |
+| **Auth Method** | API key via `X-API-Key` header |
+| **Content Type** | `application/json` (multipart for uploads) |
+| **Max Upload Size** | 25 MB per file (`MAX_FILE_SIZE`) |
+| **Allowed Types** | `image/jpeg`, `image/png`, `image/webp`, `image/heic` |
+
+> Note: `fileSize` values in responses are returned as **strings** (PostgreSQL `BIGINT`).
 
 ---
 
 ## Authentication
 
-All requests (except `GET /api/health`) require the `X-API-Key` header:
+Every request except `GET /api/health` requires the header:
 
 ```http
-X-API-Key: your-secret-api-key-here
+X-API-Key: your-secret-api-key
 ```
 
-Unauthorized requests receive:
+Missing or invalid keys receive `401`:
+
 ```json
-{
-  "error": "Unauthorized",
-  "message": "Invalid or missing API key",
-  "status": 401
-}
+{ "error": "Unauthorized", "message": "Invalid API key.", "status": 401 }
 ```
 
 ---
 
-## Endpoints
+## Health & Auth
 
-### 🟢 Health Check
+### 🟢 `GET /api/health` — Health check *(no auth)*
 
-```http
-GET /api/health
+Runs a real database query, so it reflects DB health too.
+
+**`200 OK`**
+```json
+{ "status": "online", "uptime": 86400, "timestamp": "2026-07-13T12:00:00.000Z" }
 ```
 
-**Purpose**: Server availability check (used by client heartbeat).  
-**Auth Required**: No
-
-**Response** `200 OK`:
+**`503 Service Unavailable`** — database unreachable:
 ```json
-{
-  "status": "online",
-  "uptime": 86400,
-  "timestamp": "2026-04-01T22:00:00Z"
-}
+{ "status": "degraded", "message": "Database connection issue", "timestamp": "..." }
+```
+
+### 🔐 `POST /api/auth` — Validate API key
+
+The key is validated by the auth middleware from the `X-API-Key` **header** (there is no request body).
+
+**`200 OK`**
+```json
+{ "authenticated": true, "message": "Welcome back, Sharif ☁️" }
 ```
 
 ---
 
-### 🔐 Authentication
+## Photos
 
-```http
-POST /api/auth
-```
+### 📤 `POST /api/photos/upload` — Upload a single photo
 
-**Purpose**: Validate API key and return session confirmation.  
-**Auth Required**: Yes
+`Content-Type: multipart/form-data`
 
-**Request Body**:
-```json
-{
-  "apiKey": "your-secret-api-key"
-}
-```
-
-**Response** `200 OK`:
-```json
-{
-  "authenticated": true,
-  "message": "Welcome back, Sharif"
-}
-```
-
----
-
-### 📤 Upload Single Photo
-
-```http
-POST /api/photos/upload
-Content-Type: multipart/form-data
-```
-
-**Purpose**: Upload a single photo to the server.  
-**Auth Required**: Yes
-
-**Form Fields**:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `photo` | File | ✅ | The image file (JPEG, PNG, WebP, HEIC) |
-| `hash` | String | ✅ | SHA-256 hash of the file (for deduplication) |
-| `originalName` | String | ❌ | Original filename from device |
-| `takenAt` | String | ❌ | ISO 8601 date when photo was taken |
+| `photo` | File | ✅ | The image file |
+| `hash` | String | ❌ | Client-computed hash for deduplication. If omitted, the server computes `sha256:<hex>` itself |
+| `folderId` | UUID | ❌ | Destination folder (default: root/unfiled) |
+| `takenAt` | String | ❌ | ISO 8601 capture date |
 
-**Response** `201 Created`:
+Files are stored as `<uuid>.<ext>` under date-organized directories (`YYYY/MM/DD/`).
+
+**`201 Created`**
 ```json
 {
-  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "fileName": "IMG_20260401_143022.jpg",
-  "filePath": "/uploads/2026/04/01/a1b2c3d4.jpg",
-  "fileSize": 4521398,
-  "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "mimeType": "image/jpeg",
-  "uploadedAt": "2026-04-01T14:30:22Z"
+  "id": "98ce0850-db89-4868-9b58-caca3096128a",
+  "fileName": "8f66ddae-9a64-43c7-8bf1-169600d24f18.png",
+  "originalName": "IMG_20260713_143022.png",
+  "filePath": "2026/07/13/8f66ddae-9a64-43c7-8bf1-169600d24f18.png",
+  "fileSize": "4521398",
+  "mimeType": "image/png",
+  "hash": "sha256:f988ac8e0353b0e02e29927c849583e715bdc909e90e73e84cdd40265a5386a5",
+  "folderId": null,
+  "uploadedAt": "2026-07-13T11:53:59.518Z"
 }
 ```
 
-**Error** `409 Conflict` (duplicate):
-```json
-{
-  "error": "Duplicate",
-  "message": "Photo with this hash already exists",
-  "existingId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-}
-```
+**Errors**: `400` no file provided · `409` duplicate hash (includes `existingId`) · `413` file exceeds 25 MB · `400` invalid file type
 
----
+### 📤 `POST /api/photos/batch` — Batch upload (sync queue)
 
-### 📤 Batch Upload (Sync Queue)
+`Content-Type: multipart/form-data` — max **10 files** per request.
 
-```http
-POST /api/photos/batch
-Content-Type: multipart/form-data
-```
-
-**Purpose**: Upload multiple photos in a single request.  
-**Auth Required**: Yes  
-**Max Files**: 10 per request
-
-**Form Fields**:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `photos` | File[] | ✅ | Array of image files |
-| `metadata` | JSON String | ✅ | Array of metadata objects (hash, originalName, takenAt) |
+| `photos` | File[] | ✅ | Image files |
+| `metadata` | JSON string | ❌ | Array aligned by index: `[{ "hash": "...", "folderId": "...", "takenAt": "..." }]` |
 
-**Response** `200 OK`:
+**`200 OK`** — per-file results; a partial failure does not fail the batch:
 ```json
 {
-  "total": 5,
-  "successful": 4,
+  "total": 3,
+  "successful": 2,
   "duplicates": 1,
   "failed": 0,
   "results": [
     { "index": 0, "status": "created", "id": "..." },
-    { "index": 1, "status": "created", "id": "..." },
-    { "index": 2, "status": "duplicate", "existingId": "..." },
-    { "index": 3, "status": "created", "id": "..." },
-    { "index": 4, "status": "created", "id": "..." }
+    { "index": 1, "status": "duplicate", "existingId": "..." },
+    { "index": 2, "status": "created", "id": "..." }
   ]
 }
 ```
+Failed entries have `{ "index": n, "status": "failed", "error": "<message>" }`.
 
----
+### 📋 `GET /api/photos` — List photos (paginated)
 
-### 📋 List Photos
-
-```http
-GET /api/photos?page=1&limit=20&sort=uploadedAt&order=desc
-```
-
-**Purpose**: Retrieve paginated list of uploaded photos.  
-**Auth Required**: Yes
-
-**Query Parameters**:
 | Param | Type | Default | Description |
 |-------|------|---------|-------------|
-| `page` | Number | 1 | Page number |
-| `limit` | Number | 20 | Items per page (max: 100) |
-| `sort` | String | `uploadedAt` | Sort field (`uploadedAt`, `fileSize`, `fileName`) |
-| `order` | String | `desc` | Sort order (`asc`, `desc`) |
+| `page` | Number | `1` | Page number |
+| `limit` | Number | `20` | Items per page (max 100) |
+| `sort` | String | `uploaded_at` | One of `uploaded_at`, `file_size`, `file_name` |
+| `order` | String | `desc` | `asc` or `desc` |
+| `folderId` | String | — | UUID = photos in that folder · `root` = unfiled photos · omitted = all photos |
 
-**Response** `200 OK`:
+**`200 OK`**
 ```json
 {
   "photos": [
     {
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "fileName": "IMG_20260401_143022.jpg",
-      "fileSize": 4521398,
-      "mimeType": "image/jpeg",
-      "uploadedAt": "2026-04-01T14:30:22Z",
-      "thumbnailUrl": "/api/photos/a1b2c3d4/thumbnail"
+      "id": "...", "fileName": "<uuid>.jpg", "originalName": "IMG_1234.jpg",
+      "fileSize": "4521398", "mimeType": "image/jpeg",
+      "folderId": null, "uploadedAt": "2026-07-13T11:53:59.518Z"
     }
   ],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 1423,
-    "totalPages": 72
-  }
+  "pagination": { "page": 1, "limit": 20, "total": 1423, "totalPages": 72 }
 }
 ```
 
+### 🖼️ `GET /api/photos/:id` — Download photo
+
+Returns the binary file with its `Content-Type` and `Content-Disposition: inline`. `404` if the record or the file on disk is missing.
+
+### 🗑️ `DELETE /api/photos/:id` — Delete photo
+
+Deletes the database record and the file on disk.
+
+**`200 OK`**: `{ "deleted": true, "id": "..." }`
+
+### 📁 `PUT /api/photos/:id/move` — Move photo to folder
+
+**Body**: `{ "folderId": "<uuid>" }` — or `null` to move to root.
+
+**`200 OK`**: `{ "id": "...", "folderId": "...", "message": "Photo moved to folder." }`
+**Errors**: `404` photo or target folder not found
+
+### 📁 `PUT /api/photos/batch-move` — Move multiple photos
+
+**Body**: `{ "photoIds": ["<uuid>", ...], "folderId": "<uuid>" | null }`
+
+**`200 OK`**: `{ "success": true, "movedCount": 5, "folderId": "...", "message": "..." }`
+**Errors**: `400` empty/missing `photoIds` · `404` target folder not found
+
 ---
 
-### 🖼️ Get Single Photo
+## Folders
 
-```http
-GET /api/photos/:id
-```
+### ➕ `POST /api/folders` — Create folder
 
-**Purpose**: Download the original photo file.  
-**Auth Required**: Yes  
-**Response**: Binary file with appropriate `Content-Type` header.
+**Body**: `{ "name": "Vacation", "parentId": "<uuid>" }` (`parentId` optional → root)
 
----
+Names may not contain `< > : " / \ | ? *`. Names are unique within the same parent.
 
-### 🗑️ Delete Photo
+**`201 Created`**: `{ "id": "...", "name": "Vacation", "parentId": null, "createdAt": "..." }`
+**Errors**: `400` empty/invalid name · `404` parent not found · `409` duplicate name in same parent
 
-```http
-DELETE /api/photos/:id
-```
+### 📋 `GET /api/folders` — List folders
 
-**Purpose**: Delete a photo and its metadata.  
-**Auth Required**: Yes
+| `parentId` value | Returns |
+|------------------|---------|
+| omitted | All folders |
+| `root` (or empty) | Root-level folders only |
+| `<uuid>` | Children of that folder |
 
-**Response** `200 OK`:
+**`200 OK`**
 ```json
 {
-  "deleted": true,
-  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  "folders": [
+    { "id": "...", "name": "Vacation", "parentId": null,
+      "photoCount": 42, "subfolderCount": 2, "createdAt": "..." }
+  ]
 }
 ```
 
----
+### 📄 `GET /api/folders/:id` — Get folder with breadcrumb
 
-### 📊 Storage Statistics
-
-```http
-GET /api/storage/stats
+**`200 OK`**
+```json
+{
+  "id": "...", "name": "Summer", "parentId": "...",
+  "photoCount": 12,
+  "breadcrumb": [ { "id": "...", "name": "Vacation" }, { "id": "...", "name": "Summer" } ],
+  "createdAt": "..."
+}
 ```
 
-**Purpose**: Get server storage usage information.  
-**Auth Required**: Yes
+### ✏️ `PUT /api/folders/:id` — Rename folder
 
-**Response** `200 OK`:
+**Body**: `{ "name": "New Name" }` — same validation and `409` rules as create.
+
+### 📁 `PUT /api/folders/:id/move` — Move folder
+
+**Body**: `{ "parentId": "<uuid>" | null }` (`null` → move to root)
+
+**Errors**: `400` moving a folder into itself or one of its own subfolders · `404` folder or target parent not found · `409` name conflict in destination
+
+### 🗑️ `DELETE /api/folders/:id` — Delete folder ⚠️
+
+**Destructive**: recursively deletes all subfolders and **permanently deletes every photo inside them** (database records and files on disk).
+
+**`200 OK`**: `{ "deleted": true, "id": "...", "photosDeleted": 17 }`
+
+---
+
+## Storage
+
+### 📊 `GET /api/storage/stats`
+
+**`200 OK`**
 ```json
 {
   "totalPhotos": 1423,
+  "totalFolders": 12,
   "totalSize": "6.2 GB",
   "totalSizeBytes": 6654321098,
-  "diskTotal": "430 GB",
-  "diskUsed": "38 GB",
-  "diskFree": "392 GB",
-  "diskUsagePercent": 8.8
+  "firstUpload": "2026-04-01T10:00:00.000Z",
+  "lastUpload": "2026-07-13T12:14:20.070Z"
 }
 ```
 
@@ -255,22 +246,18 @@ GET /api/storage/stats
 
 ## Error Response Format
 
-All errors follow a consistent format:
+All errors follow a consistent shape:
 
 ```json
-{
-  "error": "ErrorType",
-  "message": "Human-readable description",
-  "status": 400
-}
+{ "error": "ErrorType", "message": "Human-readable description", "status": 400 }
 ```
 
-| Status Code | Meaning |
-|-------------|---------|
+| Status | Meaning |
+|--------|---------|
 | `400` | Bad Request — invalid input |
 | `401` | Unauthorized — missing or invalid API key |
-| `404` | Not Found — photo doesn't exist |
-| `409` | Conflict — duplicate photo hash |
+| `404` | Not Found — resource doesn't exist |
+| `409` | Conflict — duplicate photo hash or folder name |
 | `413` | Payload Too Large — file exceeds 25 MB |
 | `429` | Too Many Requests — rate limit exceeded |
 | `500` | Internal Server Error |
@@ -279,12 +266,13 @@ All errors follow a consistent format:
 
 ## Rate Limiting
 
-| Endpoint | Limit |
-|----------|-------|
+Configured in `backend/src/server.js`:
+
+| Scope | Limit |
+|-------|-------|
+| All `/api` routes | 1000 requests / minute |
 | `POST /api/photos/upload` | 30 requests / minute |
 | `POST /api/photos/batch` | 5 requests / minute |
-| `GET /api/photos` | 60 requests / minute |
-| `GET /api/health` | 120 requests / minute |
 
 ---
 

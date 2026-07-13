@@ -20,8 +20,9 @@
 | 02 | [Architecture](./02-architecture/) | System design, API contracts, and data flow | `02-architecture/` |
 | 03 | [Infrastructure](./03-infrastructure/) | Server specs, tech stack, and dev environment setup | `03-infrastructure/` |
 | 04 | [Features](./04-features/) | Hybrid storage strategy and filesystem design | `04-features/` |
-| 05 | [Deployment](./05-deployment/) | Hosting strategy and remote connectivity | `05-deployment/` |
+| 05 | [Deployment](./05-deployment/) | Docker Compose setup (recommended) and manual hosting | `05-deployment/` |
 | 06 | [Roadmap](./06-roadmap/) | Phased implementation plan and priorities | `06-roadmap/` |
+| — | [Personal Setup](./my-setup/) | Author's server specs, Tailscale hardening, automation scripts | `my-setup/` |
 
 ---
 
@@ -35,25 +36,28 @@ OneCloudSync/
 │   ├── 03-infrastructure/
 │   ├── 04-features/
 │   ├── 05-deployment/
-│   └── 06-roadmap/
+│   ├── 06-roadmap/
+│   └── my-setup/           ← Author's personal server notes
 │
 ├── backend/                ← Node.js + Express + PostgreSQL
 │   ├── src/
 │   │   ├── server.js
 │   │   ├── routes/
 │   │   ├── controllers/
-│   │   ├── models/
 │   │   ├── middleware/
 │   │   └── config/
-│   ├── uploads/
-│   ├── package.json
-│   └── .env
-│
-├── frontend/               ← React PWA (deployed to Vercel)
-│   ├── public/
-│   ├── src/
+│   ├── Dockerfile
 │   └── package.json
 │
+├── frontend/               ← React PWA (Vite + nginx in Docker)
+│   ├── public/
+│   ├── src/
+│   ├── nginx.conf
+│   ├── Dockerfile
+│   └── package.json
+│
+├── docker-compose.yml      ← One-command deployment
+├── .env.example
 └── README.md
 ```
 
@@ -61,26 +65,11 @@ OneCloudSync/
 
 ## 🚀 Quick Start
 
-> Full setup instructions are available in [03-infrastructure/remote-ssh-setup.md](./03-infrastructure/remote-ssh-setup.md)
+Setup instructions live in **one place** — the [root README](../README.md#-quick-start):
 
-```bash
-# 1. Clone the project on the Toshiba server
-git clone <repo-url> ~/OneCloudSync
-
-# 2. Set up the backend
-cd ~/OneCloudSync/backend
-npm install
-cp .env.example .env    # Configure environment variables
-npm run dev
-
-# 3. Set up the frontend (for local development)
-cd ~/OneCloudSync/frontend
-npm install
-npm run dev
-```
+- **Docker (recommended)** — one command for the full stack; details in the [Docker Deployment Guide](./05-deployment/docker-deployment.md)
+- **Manual** — Node.js + local PostgreSQL for development
 
 ---
 
-> **Last Updated**: April 2026  
-> **Author**: Sharif  
-> **Server**: Toshiba Satellite L655 — Linux Mint
+> **Author**: Sharif

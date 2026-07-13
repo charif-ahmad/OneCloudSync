@@ -1,5 +1,10 @@
 # 🚀 Deployment Strategy
 
+> ⚠️ **Two supported deployment paths:**
+>
+> 1. 🐳 **[Docker Compose](./docker-deployment.md) (recommended)** — one command runs PostgreSQL, the API, and the PWA in containers. Replaces the manually installed PostgreSQL, PM2, and Nginx described below.
+> 2. 🔧 **Manual (this page)** — the original host-installed setup: Vercel frontend, PM2-managed Node.js, host Nginx, Cloudflare Tunnel. Kept for reference and for setups that can't run Docker.
+
 ## Overview
 
 The system is split across two hosting environments:

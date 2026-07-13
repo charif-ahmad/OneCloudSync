@@ -4,6 +4,8 @@
 
 The system follows a **decoupled Client-Server Model**. The frontend and backend are fully decoupled and communicate exclusively via REST API over HTTPS.
 
+> 🐳 The topology below shows the **manual deployment** (Vercel + host Nginx + PM2). In the recommended [Docker deployment](../05-deployment/docker-deployment.md), the same components run as containers on one host: nginx serves the built PWA **and** proxies `/api` to the Express container, with PostgreSQL on an internal network. The component responsibilities and request flow are otherwise identical.
+
 ---
 
 ## System Topology
