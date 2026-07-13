@@ -114,6 +114,7 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 | [Dev Setup](./docs/03-infrastructure/remote-ssh-setup.md) | VS Code Remote-SSH configuration |
 | [Storage](./docs/04-features/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
 | [Deployment](./docs/05-deployment/deployment-strategy.md) | Vercel, Cloudflare Tunnel, PM2, Nginx,your Pc |
+| [Docker Deployment](./docs/05-deployment/docker-deployment.md) | One-command setup with Docker Compose |
 | [Roadmap](./docs/06-roadmap/implementation-plan.md) | Phased implementation plan |
 | [Personal Setup](./docs/my-setup/README.md) | Specs, Tailscale VPN hardening, & auto-run scripts |
 
@@ -125,31 +126,52 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 |-----------|---------|
 | **RAM** | 2 GB+ |
 | **Storage** | 50 GB+ (depends on your photo collection) |
-| **Runtime** | Node.js v20+ |
-| **Database** | PostgreSQL |
+| **Runtime** | Docker + Docker Compose — or Node.js v20+ |
+| **Database** | PostgreSQL (bundled when using Docker) |
 
 ---
 
 ## 🚀 Quick Start
+
+### 🐳 Option A — Docker (recommended)
+
+Runs PostgreSQL, the API, and the PWA in one command. Requires Docker + Docker Compose.
+
+```bash
+git clone <repo-url>
+cd OneCloudSync
+
+cp .env.example .env    # set a real DB_PASSWORD and API_KEY
+docker compose up -d --build
+docker compose run --rm backend node src/config/db-init.js   # first run only
+
+# → open http://localhost:8080 and log in with your API_KEY
+```
+
+Photos are stored on the host in `./photos/`; database data lives in a Docker volume. See the full [Docker Deployment Guide](./docs/05-deployment/docker-deployment.md) for configuration, backups, and troubleshooting.
+
+### 🔧 Option B — Manual (local development)
 
 ```bash
 # 1. Clone the repository
 git clone <repo-url>
 cd OneCloudSync
 
-# 2. Set up the backend
+# 2. Set up the backend (requires a local PostgreSQL)
 cd backend
 cp .env.example .env    # Edit with your own values
 npm install
+npm run db:init
 npm run dev
 
 # 3. Set up the frontend
 cd ../frontend
 npm install
-npm run dev
+npm run dev             # proxies /api to localhost:3000
 ```
 
-> See [.env.example](./backend/.env.example) for all configuration options.
+> See [backend/.env.example](./backend/.env.example) for all configuration options.
+> Tip: you can also run just the database in Docker: `docker compose up -d db`
 
 ---
 
