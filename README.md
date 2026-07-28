@@ -106,15 +106,10 @@ Full technical documentation is available in the [`docs/`](./docs/README.md) dir
 
 | Section | What's Inside |
 |---------|--------------|
-| [Project Vision](./docs/01-project-vision/project-overview.md) | Goals, scope, design principles |
-| [Architecture](./docs/02-architecture/system-architecture.md) | System topology, component design |
-| [API Design](./docs/02-architecture/api-design.md) | All REST endpoints with schemas |
-| [Server Specs](./docs/03-infrastructure/server-specs.md) | Hardware report, resource budgeting |
-| [Tech Stack](./docs/03-infrastructure/tech-stack.md) | All technologies and why they were chosen |
-| [Dev Setup](./docs/03-infrastructure/remote-ssh-setup.md) | VS Code Remote-SSH configuration |
-| [Storage](./docs/04-features/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
-| [Deployment](./docs/05-deployment/README.md) | Running with Docker Compose or manually, on any device |
-| [Roadmap](./docs/06-roadmap/implementation-plan.md) | Phased implementation plan |
+| [Project Vision](./docs/project-overview.md) | Goals, scope, design principles |
+| [Architecture](./docs/system-architecture.md) | System topology, component design |
+| [Storage](./docs/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
+| [Deployment](./docs/deployment.md) | Running with Docker Compose or manually, on any device |
 | [Personal Setup](./docs/my-setup/README.md) | Specs, Tailscale VPN hardening, & auto-run scripts |
 
 ---

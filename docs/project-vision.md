@@ -60,4 +60,4 @@ Single-user system with API key authentication. No complex OAuth flows — secur
 
 ---
 
-> **Next**: [System Architecture →](../02-architecture/system-architecture.md)
+> **Next**: [System Architecture →](./system-architecture.md)

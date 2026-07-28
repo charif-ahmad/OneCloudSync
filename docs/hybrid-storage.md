@@ -17,7 +17,7 @@ The system uses a **dual-storage approach**:
 
 ```
 /home/<user>/OneCloudSync/backend/uploads/
-└── YYYY/
+└── YarchitectureYYY/
     └── MM/
         └── DD/
             ├── <uuid>.jpg
@@ -172,4 +172,4 @@ pg_dump onecloudsync > db-backup-$(date +%Y%m%d).sql
 
 ---
 
-> **Next**: [Deployment →](../05-deployment/README.md)
+> **Next**: [Deployment →](./deployment.md)
