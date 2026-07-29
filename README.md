@@ -8,10 +8,10 @@
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/status-in--development-orange" alt="Status">
+    <img src="https://img.shields.io/badge/docker-compose-2496ED?logo=docker" alt="Docker">
     <img src="https://img.shields.io/badge/node.js-v20-green?logo=nodedotjs" alt="Node.js">
     <img src="https://img.shields.io/badge/react-v19-blue?logo=react" alt="React">
-    <img src="https://img.shields.io/badge/postgresql-latest-336791?logo=postgresql" alt="PostgreSQL">
-    <img src="https://img.shields.io/badge/PWA-ready-5A0FC8?logo=pwa" alt="PWA">
+    <img src="https://img.shields.io/badge/postgresql-17-336791?logo=postgresql" alt="PostgreSQL">
   </p>
 </p>
 
@@ -23,31 +23,14 @@
 
 ---
 
-## 🌟 Overview
+## 🌟 What is this?
 
-OneCloudSync is a **personal cloud system** that lets you upload and store photos from your smartphone to your home server.
+OneCloudSync lets you upload and store photos from your phone to your own server. No cloud subscriptions, no third-party storage — just your hardware.
 
-### Key Features
-
-- 📤 **Photo Upload** — Single and batch upload with drag & drop
-- 🖼️ **Gallery** — Browse and manage your photo collection
-- 🔒 **Secure** — API key auth, rate limiting, optional VPN-only access (Tailscale)
-- 💰 **Zero Cost** — Runs entirely on your own hardware
-
----
-
-## 🛠️ Case Study: Zero-Cost Homelab Deployment
-
-> 🚀 **Engineering Spotlight for Founders & Entrepreneurs**
->
-> This project isn't just code—it's a fully operational production setup built on a **$0 infrastructure budget** by repurposing an old **2010 Toshiba Satellite L655 laptop** as a hardened home server. 
-> 
-> Key engineering highlights of this real-world deployment:
-> - **Zero Open Ports**: Entirely isolated behind a secure **Tailscale VPN (WireGuard)**. No public exposure, no open router ports.
-> - **Extreme Resource Optimization**: Configured to run PostgreSQL, Express, Nginx, and Tailscale smoothly on just **4.1 GB of RAM** by disabling the desktop environment and tuning database buffers.
-> - **Zero Cost**: Repurposed hardware + free-tier developer tools.
->
-> 📂 Curious about how it was done? Check out the [Personal Setup & Hardening Guide](./docs/my-setup/README.md).
+- 📤 **Upload** — Single and batch upload with drag & drop
+- 🖼️ **Gallery** — Browse and manage your photos
+- 🔒 **Secure** — API key auth + optional Tailscale VPN
+- 💰 **Free** — Runs on any machine you already own
 
 ---
 
@@ -61,8 +44,31 @@ OneCloudSync is a **personal cloud system** that lets you upload and store photo
                   ┌────┴────┐
                   │         │
                Photos   PostgreSQL
-             (Filesystem) (Metadata)
+            (filesystem) (metadata)
 ```
+
+Photos are stored as **files on disk** (`./photos/YYYY/MM/DD/uuid.jpg`). Metadata (names, sizes, hashes) lives in **PostgreSQL**. This keeps backups simple — `rsync` the photos folder, `pg_dump` the database.
+
+---
+
+## 🚀 Quick Start
+
+Requires **Docker** + **Docker Compose**.
+
+```bash
+git clone <repo-url>
+cd OneCloudSync
+
+cp .env.example .env          # set DB_PASSWORD and API_KEY
+docker compose up -d --build
+```
+
+Open `http://localhost:8080` and log in with your `API_KEY`.
+
+> **First run?** Initialize the database:
+> ```bash
+> docker compose run --rm backend node src/config/db-init.js
+> ```
 
 ---
 
@@ -70,107 +76,66 @@ OneCloudSync is a **personal cloud system** that lets you upload and store photo
 
 ```
 OneCloudSync/
-├── backend/              # Node.js + Express REST API
-│   ├── src/
-│   │   ├── server.js
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── middleware/
-│   │   └── config/
-│   ├── uploads/          # Photo storage (date-organized)
-│   ├── package.json
-│   └── .env
-│
-├── frontend/             # React PWA (Vite)
-│   ├── public/
-│   ├── src/
-│   └── package.json
-│
-├── docs/                 # Full technical documentation
-│   ├── 01-project-vision/
-│   ├── 02-architecture/
-│   ├── 03-infrastructure/
-│   ├── 04-features/
-│   ├── 05-deployment/
-│   └── 06-roadmap/
-│
-└── README.md             ← You are here
+├── backend/           # Node.js + Express API
+├── frontend/          # React PWA (Vite)
+├── docker-compose.yml
+├── .env.example
+├── photos/            # Uploaded photos (host-mounted volume)
+└── docs/
+    └── my-setup.md    # Personal server notes
 ```
 
 ---
 
-## 📚 Documentation
+## 🔐 Tailscale (optional)
 
-Full technical documentation is available in the [`docs/`](./docs/README.md) directory:
+Want to access your photos **from anywhere** — not just your home WiFi? [Tailscale](https://tailscale.com) creates a private encrypted tunnel (WireGuard) between your devices. No port forwarding, no router config, free for personal use.
 
-| Section | What's Inside |
-|---------|--------------|
-| [Project Vision](./docs/project-overview.md) | Goals, scope, design principles |
-| [Architecture](./docs/system-architecture.md) | System topology, component design |
-| [Storage](./docs/hybrid-storage.md) | Filesystem + PostgreSQL hybrid approach |
-| [Deployment](./docs/deployment.md) | Running with Docker Compose or manually, on any device |
-| [Personal Setup](./docs/my-setup/README.md) | Specs, Tailscale VPN hardening, & auto-run scripts |
-
----
-
-## 🖥️ Requirements
-
-| Component | Minimum |
-|-----------|---------|
-| **RAM** | 2 GB+ |
-| **Storage** | 50 GB+ (depends on your photo collection) |
-| **Runtime** | Docker + Docker Compose — or Node.js v20+ |
-| **Database** | PostgreSQL (bundled when using Docker) |
-
----
-
-## 🚀 Quick Start
-
-### 🐳 Option A — Docker (recommended)
-
-Runs PostgreSQL, the API, and the PWA in one command. Requires Docker + Docker Compose.
+**1. Install on your server:**
 
 ```bash
-git clone <repo-url>
-cd OneCloudSync
-
-cp .env.example .env    # set a real DB_PASSWORD and API_KEY
-docker compose up -d --build
-docker compose run --rm backend node src/config/db-init.js   # first run only
-
-# → open http://localhost:8080 and log in with your API_KEY
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+tailscale ip -4          # → gives you something like 100.103.154.10
 ```
 
-Photos are stored on the host in `./photos/`; database data lives in a Docker volume. See the [Deployment Guide](./docs/05-deployment/README.md) for backups and configuration.
+**2. Install on your phone:** Download Tailscale from the App Store / Play Store, sign in with the same account. (make sure that tailscale is running on both devices)
 
-### 🔧 Option B — Manual (local development)
+**3. Lock down the app** — add one line to `.env`:
+
+```dotenv
+BIND_IP=100.103.154.10  # replace with your server's Tailscale IP from step 1 
+```
+
+Then `docker compose up -d`. Now the app is reachable **only** through Tailscale — invisible to your local network.
+
+**4. Connect from anywhere:** Open `http://100.103.154.10:8080` on your phone. Works from home, from a café, from another country — as long as Tailscale is running on both devices.
+
+---
+
+## 🛠️ Development
 
 ```bash
-# 1. Clone the repository
-git clone <repo-url>
-cd OneCloudSync
+# Run just the database in Docker
+docker compose up -d db
 
-# 2. Set up the backend (requires a local PostgreSQL)
-cd backend
-cp .env.example .env    # Edit with your own values
-npm install
-npm run db:init
-npm run dev
+# Backend
+cd backend && npm install && npm run dev
 
-# 3. Set up the frontend
-cd ../frontend
-npm install
-npm run dev             # proxies /api to localhost:3000
+# Frontend (in another terminal)
+cd frontend && npm install && npm run dev
 ```
 
-> See [backend/.env.example](./backend/.env.example) for all configuration options.
-> Tip: you can also run just the database in Docker: `docker compose up -d db`
+The Vite dev server proxies `/api` to `localhost:3000` automatically.
+
+---
+
+## 🔧 Real-World Deployment
+
+This project runs 24/7 on a **2010 Toshiba Satellite L655** (4 GB RAM, 430 GB HDD) behind a Tailscale VPN — zero cost, zero open ports. See [my-setup.md](./docs/my-setup.md) for the full story.
 
 ---
 
 MIT License — see the [LICENSE](LICENSE) file for details.
-
----
 
 > Built with ☕ by Sharif
