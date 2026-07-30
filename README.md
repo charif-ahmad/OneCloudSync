@@ -7,7 +7,6 @@
     A self-hosted photo storage system powered by a React PWA and a Node.js home server.
   </p>
   <p align="center">
-    <img src="https://img.shields.io/badge/status-in--development-orange" alt="Status">
     <img src="https://img.shields.io/badge/docker-compose-2496ED?logo=docker" alt="Docker">
     <img src="https://img.shields.io/badge/node.js-v20-green?logo=nodedotjs" alt="Node.js">
     <img src="https://img.shields.io/badge/react-v19-blue?logo=react" alt="React">
